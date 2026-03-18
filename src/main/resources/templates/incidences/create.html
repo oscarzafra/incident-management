@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nueva incidencia</title>
+</head>
+<body>
+<h1>Crear incidencia</h1>
+
+<form th:action="@{/incidences}" th:object="${incidence}" method="post">
+    <label>Título:</label>
+    <input type="text" th:field="*{title}" required />
+    <br><br>
+
+    <label>Descripción:</label>
+    <textarea th:field="*{description}" required></textarea>
+    <br><br>
+
+    <button type="submit">Guardar</button>
+</form>
+
+<br>
+<a href="/incidences">Volver</a>
+</body>
+</html>

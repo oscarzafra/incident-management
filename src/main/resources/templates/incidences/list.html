@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mis incidencias</title>
+</head>
+<body>
+<h1>Mis incidencias</h1>
+
+<a href="/incidences/new">Crear incidencia</a>
+<br><br>
+<a href="/">Volver al inicio</a>
+<br><br>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        <th>Fecha creación</th>
+    </tr>
+    <tr th:each="incidence : ${incidences}">
+        <td th:text="${incidence.id}"></td>
+        <td th:text="${incidence.title}"></td>
+        <td th:text="${incidence.description}"></td>
+        <td th:text="${incidence.status}"></td>
+        <td th:text="${incidence.createdAt}"></td>
+    </tr>
+</table>
+</body>
+</html>
