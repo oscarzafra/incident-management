@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Nueva incidencia</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+
 <h1>Crear incidencia</h1>
 
-<form th:action="@{/incidences}" th:object="${incidence}" method="post">
-    <label>Título:</label>
-    <input type="text" th:field="*{title}" required />
-    <br><br>
+<div class="card-form">
+    <form th:action="@{/incidences}" th:object="${incidence}" method="post">
+        <label for="title">Título</label>
+        <input id="title" type="text" th:field="*{title}" required>
 
-    <label>Descripción:</label>
-    <textarea th:field="*{description}" required></textarea>
-    <br><br>
+        <label for="description">Descripción</label>
+        <textarea id="description" th:field="*{description}" required></textarea>
 
-    <button type="submit">Guardar</button>
-</form>
+        <div class="acciones">
+            <button type="submit">Guardar incidencia</button>
+            <a class="btn btn-secundario" th:href="@{/incidences}">Cancelar</a>
+        </div>
+    </form>
+</div>
 
-<br>
-<a href="/incidences">Volver</a>
 </body>
 </html>

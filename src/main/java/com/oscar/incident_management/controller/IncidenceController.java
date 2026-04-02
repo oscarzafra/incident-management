@@ -18,8 +18,10 @@ public class IncidenceController {
     }
 
     @GetMapping
-    public String listIncidences(Model model, Authentication authentication) {
+    public String listIncidences(Model model, Authentication authentication,
+                                 @RequestParam(value = "success", required = false) String success) {
         model.addAttribute("incidences", incidenceService.findByClientUsername(authentication.getName()));
+        model.addAttribute("success", success);
         return "incidences/list";
     }
 
@@ -32,6 +34,6 @@ public class IncidenceController {
     @PostMapping
     public String createIncidence(@ModelAttribute Incidence incidence, Authentication authentication) {
         incidenceService.save(incidence, authentication.getName());
-        return "redirect:/incidences";
+        return "redirect:/incidences?success=created";
     }
 }

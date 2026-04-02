@@ -11,18 +11,18 @@ public class HomeController {
         return "home";
     }
 
+    @GetMapping("/client")
+    public String client() {
+        return "redirect:/incidences";
+    }
+
     @GetMapping("/admin")
     public String admin() {
-        return "admin";
+        return "redirect:/admin/incidences";
     }
 
     @GetMapping("/technician")
     public String technician() {
         return "technician";
-    }
-
-    @GetMapping("/client")
-    public String client() {
-        return "client";
     }
 }

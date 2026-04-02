@@ -41,4 +41,22 @@ public class IncidenceServiceImpl implements IncidenceService {
         incidence.setClient(client);
         return incidenceRepository.save(incidence);
     }
+
+    @Override
+    public Incidence findById(Long id) {
+        return incidenceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+    }
+
+    @Override
+    public Incidence assignTechnician(Long incidenceId, Long technicianId) {
+        Incidence incidence = incidenceRepository.findById(incidenceId)
+                .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+
+        User technician = userRepository.findById(technicianId)
+                .orElseThrow(() -> new RuntimeException("Técnico no encontrado"));
+
+        incidence.setTechnician(technician);
+        return incidenceRepository.save(incidence);
+    }
 }

@@ -2,24 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Mis incidencias</title>
+    <title>Gestión de incidencias</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 
-<h1>Mis incidencias</h1>
+<h1>Gestión de incidencias</h1>
 
-<div th:if="${success == 'created'}" class="mensaje-ok">
-    La incidencia se ha creado correctamente.
+<div th:if="${success == 'assigned'}" class="mensaje-ok">
+    El técnico se ha asignado correctamente.
 </div>
 
 <div class="acciones">
-    <a class="btn" th:href="@{/incidences/new}">Crear incidencia</a>
     <a class="btn btn-secundario" th:href="@{/}">Volver al inicio</a>
 </div>
 
 <div th:if="${#lists.isEmpty(incidences)}" class="sin-datos">
-    No tienes incidencias registradas todavía.
+    No hay incidencias registradas.
 </div>
 
 <table th:if="${not #lists.isEmpty(incidences)}">
@@ -27,18 +26,26 @@
     <tr>
         <th>ID</th>
         <th>Título</th>
-        <th>Descripción</th>
+        <th>Cliente</th>
         <th>Estado</th>
-        <th>Fecha de creación</th>
+        <th>Técnico asignado</th>
+        <th>Fecha creación</th>
+        <th>Acción</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="incidence : ${incidences}">
         <td th:text="${incidence.id}"></td>
         <td th:text="${incidence.title}"></td>
-        <td th:text="${incidence.description}"></td>
+        <td th:text="${incidence.client != null ? incidence.client.fullName : 'Sin cliente'}"></td>
         <td th:text="${incidence.status}"></td>
+        <td th:text="${incidence.technician != null ? incidence.technician.fullName : 'Sin asignar'}"></td>
         <td th:text="${#temporals.format(incidence.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+        <td>
+            <a class="btn" th:href="@{'/admin/incidences/' + ${incidence.id} + '/assign'}">
+                Asignar técnico
+            </a>
+        </td>
     </tr>
     </tbody>
 </table>

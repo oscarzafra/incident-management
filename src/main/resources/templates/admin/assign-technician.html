@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Asignar técnico</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<h1>Asignar técnico</h1>
+
+<div class="card-form">
+    <p><strong>Incidencia:</strong> <span th:text="${incidence.title}"></span></p>
+    <p><strong>Descripción:</strong> <span th:text="${incidence.description}"></span></p>
+    <p><strong>Estado actual:</strong> <span th:text="${incidence.status}"></span></p>
+
+    <form th:action="@{'/admin/incidences/' + ${incidence.id} + '/assign'}" method="post">
+        <label for="technicianId">Selecciona un técnico</label>
+        <select id="technicianId" name="technicianId" required>
+            <option value="">-- Selecciona un técnico --</option>
+            <option th:each="technician : ${technicians}"
+                    th:value="${technician.id}"
+                    th:text="${technician.fullName + ' (' + technician.username + ')'}">
+            </option>
+        </select>
+
+        <div class="acciones">
+            <button type="submit">Asignar técnico</button>
+            <a class="btn btn-secundario" th:href="@{/admin/incidences}">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,19 +1,44 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Inicio</title>
+    <meta charset="UTF-8">
+    <title>Inicio - Gestión de Incidencias</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<h1>Bienvenido</h1>
-<p>Has iniciado sesión correctamente.</p>
 
-<a href="/incidences">Mis incidencias</a><br>
-<a href="/incidences/new">Crear incidencia</a><br><br>
+<div class="home-container">
+    <div class="home-card">
+        <h1>Sistema de Gestión de Incidencias</h1>
+        <p class="home-subtitle">
+            Bienvenido a la aplicación de gestión de incidencias técnicas.
+            Selecciona la zona correspondiente según tu rol.
+        </p>
 
-<a href="/admin">Zona admin</a><br>
-<a href="/technician">Zona técnico</a><br>
-<a href="/client">Zona cliente</a><br><br>
+        <div class="menu-grid">
+            <a class="menu-card" th:href="@{/client}">
+                <h2>Zona Cliente</h2>
+                <p>Consultar tus incidencias y crear nuevas solicitudes.</p>
+            </a>
 
-<a href="/logout">Cerrar sesión</a>
+            <a class="menu-card" th:href="@{/technician}">
+                <h2>Zona Técnico</h2>
+                <p>Gestionar incidencias asignadas y actualizar su estado.</p>
+            </a>
+
+            <a class="menu-card" th:href="@{/admin}">
+                <h2>Zona Administrador</h2>
+                <p>Supervisar incidencias, usuarios y asignaciones.</p>
+            </a>
+        </div>
+
+        <div class="acciones">
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-secundario">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
