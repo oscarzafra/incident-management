@@ -10,8 +10,8 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+    @Column(unique = true, nullable = false)
+    private String name; // ROLE_ADMIN, ROLE_TECHNICIAN, ROLE_CLIENT
 
     public Role() {
     }

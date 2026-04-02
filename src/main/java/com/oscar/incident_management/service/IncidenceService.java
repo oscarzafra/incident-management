@@ -1,17 +1,15 @@
 package com.oscar.incident_management.service;
 
 import com.oscar.incident_management.entity.Incidence;
+import com.oscar.incident_management.entity.IncidenceStatus;
+
 import java.util.List;
 
 public interface IncidenceService {
-
-    List<Incidence> findAll();
-
-    List<Incidence> findByClientUsername(String username);
-
-    Incidence save(Incidence incidence, String username);
-
+    Incidence createForClient(Incidence incidence, String username);
+    List<Incidence> findVisibleForUser(String username);
     Incidence findById(Long id);
-
-    Incidence assignTechnician(Long incidenceId, Long technicianId);
+    Incidence findAccessibleById(Long id, String username);
+    void assignTechnician(Long incidenceId, Long technicianId);
+    void changeStatus(Long incidenceId, IncidenceStatus newStatus, String username);
 }

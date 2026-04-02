@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Panel de administración</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Panel de administración</h1>
+
+    <div class="actions">
+        <a th:href="@{/home}">Volver</a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Estado</th>
+            <th>Técnico</th>
+            <th>Asignar técnico</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="incidence : ${incidences}">
+            <td th:text="${incidence.id}"></td>
+            <td th:text="${incidence.title}"></td>
+            <td th:text="${incidence.status}"></td>
+            <td th:text="${incidence.assignedTechnician != null ? incidence.assignedTechnician.username : 'Sin asignar'}"></td>
+            <td>
+                <form th:action="@{/admin/incidences/{id}/assign(id=${incidence.id})}" method="post">
+                    <select name="technicianId">
+                        <option th:each="tech : ${technicians}" th:value="${tech.id}" th:text="${tech.username}"></option>
+                    </select>
+                    <button type="submit">Asignar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

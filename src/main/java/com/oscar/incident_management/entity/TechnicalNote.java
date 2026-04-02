@@ -1,6 +1,8 @@
 package com.oscar.incident_management.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,19 +13,20 @@ public class TechnicalNote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 3000)
+    @NotBlank
+    @Column(nullable = false, length = 2000)
     private String content;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "incidence_id")
+    private Incidence incidence;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "author_id")
+    private User author;
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    @ManyToOne
-    @JoinColumn(name = "author_id", nullable = false)
-    private User author;
-
-    @ManyToOne
-    @JoinColumn(name = "incidence_id", nullable = false)
-    private Incidence incidence;
 
     public TechnicalNote() {
     }
@@ -36,16 +39,16 @@ public class TechnicalNote {
         return content;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public Incidence getIncidence() {
+        return incidence;
     }
 
     public User getAuthor() {
         return author;
     }
 
-    public Incidence getIncidence() {
-        return incidence;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     public void setId(Long id) {
@@ -56,15 +59,15 @@ public class TechnicalNote {
         this.content = content;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setIncidence(Incidence incidence) {
+        this.incidence = incidence;
     }
 
     public void setAuthor(User author) {
         this.author = author;
     }
 
-    public void setIncidence(Incidence incidence) {
-        this.incidence = incidence;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

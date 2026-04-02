@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detalle de incidencia</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <div>
+            <h1>Detalle de incidencia</h1>
+            <p class="subtitle">Visualización completa de la incidencia y sus acciones asociadas.</p>
+        </div>
+    </div>
+
+    <div class="actions">
+        <a class="btn btn-outline" th:href="@{/incidences}">Volver al listado</a>
+    </div>
+
+    <div class="card">
+        <h2 th:text="${incidence != null && incidence.title != null ? incidence.title : 'Incidencia sin título'}"></h2>
+
+        <div class="detail-grid">
+            <div class="detail-item">
+                <strong>ID</strong>
+                <span th:text="${incidence.id}"></span>
+            </div>
+
+            <div class="detail-item">
+                <strong>Estado actual</strong>
+                <span class="badge"
+                      th:classappend="${incidence.status.name() == 'ABIERTA'} ? ' badge-open' :
+                                      (${incidence.status.name() == 'EN_PROCESO'} ? ' badge-progress' :
+                                      (${incidence.status.name() == 'RESUELTA'} ? ' badge-success' : ' badge-closed'))"
+                      th:text="${incidence.status}">
+                </span>
+            </div>
+
+            <div class="detail-item">
+                <strong>Cliente</strong>
+                <span th:text="${incidence.client.username}"></span>
+            </div>
+
+            <div class="detail-item">
+                <strong>Técnico asignado</strong>
+                <span th:text="${incidence.assignedTechnician != null ? incidence.assignedTechnician.username : 'Sin asignar'}"></span>
+            </div>
+
+            <div class="detail-item" style="grid-column: 1 / -1;">
+                <strong>Descripción</strong>
+                <p th:text="${incidence.description}"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-dashboard">
+        <div>
+            <div class="card">
+                <h3>Cambiar estado</h3>
+                <form class="compact" th:action="@{/incidences/{id}/status(id=${incidence.id})}" method="post">
+                    <div class="form-grid">
+                        <div class="full">
+                            <label>Nuevo estado</label>
+                            <select name="status">
+                                <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-warning">Actualizar estado</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Añadir nota técnica</h3>
+                <form class="compact" th:action="@{/incidences/{id}/notes(id=${incidence.id})}" method="post">
+                    <div>
+                        <label>Nota</label>
+                        <textarea name="content" required placeholder="Escribe una observación técnica"></textarea>
+                    </div>
+                    <button type="submit" class="btn-success">Guardar nota</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Subir imagen</h3>
+                <form class="compact" th:action="@{/incidences/{id}/attachments(id=${incidence.id})}" method="post" enctype="multipart/form-data">
+                    <div>
+                        <label>Selecciona una imagen</label>
+                        <input type="file" name="file" accept="image/*">
+                    </div>
+                    <button type="submit">Subir imagen</button>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <div class="card">
+                <h3>Imágenes adjuntas</h3>
+                <div class="attachments-grid">
+                    <div class="attachment-card" th:each="attachment : ${attachments}">
+                        <a th:href="@{${attachment.filePath}}" target="_blank">
+                            <img th:src="@{${attachment.filePath}}" alt="Imagen adjunta">
+                        </a>
+                        <p th:text="${attachment.originalFilename}"></p>
+                    </div>
+                </div>
+                <p th:if="${#lists.isEmpty(attachments)}">No hay imágenes adjuntas.</p>
+            </div>
+
+            <div class="card">
+                <h3>Notas técnicas</h3>
+                <ul class="list-clean">
+                    <li th:if="${#lists.isEmpty(technicalNotes)}">No hay notas técnicas registradas.</li>
+                    <li th:each="note : ${technicalNotes}">
+                        <strong th:text="${note.author.username}"></strong>
+                        <p class="muted" th:text="${#temporals.format(note.createdAt, 'dd/MM/yyyy HH:mm')}"></p>
+                        <p th:text="${note.content}"></p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Histórico de estados</h3>
+        <div class="table-card">
+            <table>
+                <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Anterior</th>
+                    <th>Nuevo</th>
+                    <th>Usuario</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(statusHistory)}">
+                    <td colspan="4">No hay cambios de estado registrados.</td>
+                </tr>
+                <tr th:each="history : ${statusHistory}">
+                    <td th:text="${#temporals.format(history.changedAt, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${history.previousStatus}"></td>
+                    <td th:text="${history.newStatus}"></td>
+                    <td th:text="${history.changedBy.username}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="floating-actions">
+        <a class="btn btn-outline" th:href="@{/incidences}">Volver</a>
+    </div>
+</div>
+</body>
+</html>

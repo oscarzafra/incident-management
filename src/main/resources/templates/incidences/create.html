@@ -1,28 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>Crear incidencia</title>
     <meta charset="UTF-8">
-    <title>Nueva incidencia</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+<div class="container">
+    <div class="page-header">
+        <div>
+            <h1>Crear incidencia</h1>
+            <p class="subtitle">Registra una nueva incidencia técnica en el sistema.</p>
+        </div>
+    </div>
 
-<h1>Crear incidencia</h1>
+    <div class="actions">
+        <a class="btn btn-outline" th:href="@{/incidences}">Volver</a>
+    </div>
 
-<div class="card-form">
-    <form th:action="@{/incidences}" th:object="${incidence}" method="post">
-        <label for="title">Título</label>
-        <input id="title" type="text" th:field="*{title}" required>
+    <form th:action="@{/incidences/create}" th:object="${incidence}" method="post">
+        <div class="form-grid">
+            <div class="full">
+                <label>Título</label>
+                <input type="text" th:field="*{title}" placeholder="Ej. Fallo en central de alarma">
+                <div class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+            </div>
 
-        <label for="description">Descripción</label>
-        <textarea id="description" th:field="*{description}" required></textarea>
+            <div class="full">
+                <label>Descripción</label>
+                <textarea th:field="*{description}" placeholder="Describe el problema detectado"></textarea>
+                <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+            </div>
+        </div>
 
-        <div class="acciones">
+        <div class="floating-actions">
             <button type="submit">Guardar incidencia</button>
-            <a class="btn btn-secundario" th:href="@{/incidences}">Cancelar</a>
         </div>
     </form>
 </div>
-
 </body>
 </html>

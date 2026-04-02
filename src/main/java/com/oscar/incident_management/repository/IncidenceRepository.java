@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IncidenceRepository extends JpaRepository<Incidence, Long> {
-    List<Incidence> findByClient(User client);
-    List<Incidence> findByTechnician(User technician);
+    List<Incidence> findByClientOrderByCreatedAtDesc(User client);
+    List<Incidence> findByAssignedTechnicianOrderByCreatedAtDesc(User technician);
+    List<Incidence> findAllByOrderByCreatedAtDesc();
 }

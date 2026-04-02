@@ -1,6 +1,7 @@
 package com.oscar.incident_management.entity;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,16 +12,19 @@ public class Attachment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String fileName;
+    @Column(name = "original_filename", nullable = false)
+    private String originalFilename;
 
-    @Column(nullable = false)
+    @Column(name = "stored_filename", nullable = false)
+    private String storedFilename;
+
+    @Column(name = "file_path", nullable = false)
     private String filePath;
 
-    @Column(nullable = false)
+    @Column(name = "uploaded_at", nullable = false)
     private LocalDateTime uploadedAt = LocalDateTime.now();
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "incidence_id", nullable = false)
     private Incidence incidence;
 
@@ -31,8 +35,12 @@ public class Attachment {
         return id;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getOriginalFilename() {
+        return originalFilename;
+    }
+
+    public String getStoredFilename() {
+        return storedFilename;
     }
 
     public String getFilePath() {
@@ -51,8 +59,12 @@ public class Attachment {
         this.id = id;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setOriginalFilename(String originalFilename) {
+        this.originalFilename = originalFilename;
+    }
+
+    public void setStoredFilename(String storedFilename) {
+        this.storedFilename = storedFilename;
     }
 
     public void setFilePath(String filePath) {

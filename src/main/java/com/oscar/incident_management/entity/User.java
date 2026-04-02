@@ -1,6 +1,9 @@
 package com.oscar.incident_management.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,22 +16,26 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
+    @NotBlank
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    @Column(nullable = false)
-    private Boolean enabled = true;
+    @Email
+    @Column(unique = true, nullable = false)
+    private String email;
 
     @Column(nullable = false)
+    private boolean enabled = true;
+
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -42,16 +49,16 @@ public class User {
     public User() {
     }
 
+    public boolean hasRole(String roleName) {
+        return roles.stream().anyMatch(role -> role.getName().equals(roleName));
+    }
+
     public Long getId() {
         return id;
     }
 
     public String getUsername() {
         return username;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public String getPassword() {
@@ -62,7 +69,11 @@ public class User {
         return fullName;
     }
 
-    public Boolean getEnabled() {
+    public String getEmail() {
+        return email;
+    }
+
+    public boolean isEnabled() {
         return enabled;
     }
 
@@ -82,10 +93,6 @@ public class User {
         this.username = username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -94,7 +101,11 @@ public class User {
         this.fullName = fullName;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

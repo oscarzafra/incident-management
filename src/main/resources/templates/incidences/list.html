@@ -1,47 +1,75 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>Listado de incidencias</title>
     <meta charset="UTF-8">
-    <title>Mis incidencias</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+<div class="container">
+    <div class="page-header">
+        <div>
+            <h1>Listado de incidencias</h1>
+            <p class="subtitle">Consulta y seguimiento de las incidencias registradas en el sistema.</p>
+        </div>
+    </div>
 
-<h1>Mis incidencias</h1>
+    <div class="actions">
+        <a class="btn btn-outline" th:href="@{/home}">Volver</a>
+        <a class="btn" th:href="@{/incidences/create}">Nueva incidencia</a>
+    </div>
 
-<div th:if="${success == 'created'}" class="mensaje-ok">
-    La incidencia se ha creado correctamente.
+    <div class="table-card">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Estado</th>
+                <th>Cliente</th>
+                <th>Técnico</th>
+                <th>Fecha</th>
+                <th>Detalle</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(incidences)}">
+                <td colspan="7">No hay incidencias registradas.</td>
+            </tr>
+
+            <tr th:each="incidence : ${incidences}" th:if="${incidence != null}">
+                <td th:text="${incidence.id} ?: '-'"></td>
+                <td>
+                    <strong th:text="${incidence.title} ?: 'Sin título'"></strong>
+                </td>
+                <td>
+                    <span class="badge"
+                          th:if="${incidence.status != null}"
+                          th:classappend="${incidence.status.name() == 'ABIERTA'} ? ' badge-open' :
+                                          (${incidence.status.name() == 'EN_PROCESO'} ? ' badge-progress' :
+                                          (${incidence.status.name() == 'RESUELTA'} ? ' badge-success' : ' badge-closed'))"
+                          th:text="${incidence.status}">
+                    </span>
+                    <span th:if="${incidence.status == null}">Sin estado</span>
+                </td>
+                <td th:text="${incidence.client != null ? incidence.client.username : '-'}"></td>
+                <td th:text="${incidence.assignedTechnician != null ? incidence.assignedTechnician.username : 'Sin asignar'}"></td>
+                <td th:text="${incidence.createdAt != null ? #temporals.format(incidence.createdAt, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+                <td>
+                    <a class="btn btn-outline"
+                       th:if="${incidence.id != null}"
+                       th:href="@{/incidences/{id}(id=${incidence.id})}">
+                        Ver
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="floating-actions">
+        <a class="btn" th:href="@{/incidences/create}">Crear incidencia</a>
+    </div>
 </div>
-
-<div class="acciones">
-    <a class="btn" th:href="@{/incidences/new}">Crear incidencia</a>
-    <a class="btn btn-secundario" th:href="@{/}">Volver al inicio</a>
-</div>
-
-<div th:if="${#lists.isEmpty(incidences)}" class="sin-datos">
-    No tienes incidencias registradas todavía.
-</div>
-
-<table th:if="${not #lists.isEmpty(incidences)}">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Título</th>
-        <th>Descripción</th>
-        <th>Estado</th>
-        <th>Fecha de creación</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="incidence : ${incidences}">
-        <td th:text="${incidence.id}"></td>
-        <td th:text="${incidence.title}"></td>
-        <td th:text="${incidence.description}"></td>
-        <td th:text="${incidence.status}"></td>
-        <td th:text="${#temporals.format(incidence.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
-    </tr>
-    </tbody>
-</table>
-
 </body>
 </html>

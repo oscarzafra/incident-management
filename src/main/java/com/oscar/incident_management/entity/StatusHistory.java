@@ -1,6 +1,7 @@
 package com.oscar.incident_management.entity;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,6 +12,10 @@ public class StatusHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "incidence_id")
+    private Incidence incidence;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private IncidenceStatus previousStatus;
@@ -19,22 +24,22 @@ public class StatusHistory {
     @Column(nullable = false)
     private IncidenceStatus newStatus;
 
-    @Column(nullable = false)
-    private LocalDateTime changedAt = LocalDateTime.now();
-
-    @ManyToOne
-    @JoinColumn(name = "changed_by_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "changed_by_id")
     private User changedBy;
 
-    @ManyToOne
-    @JoinColumn(name = "incidence_id", nullable = false)
-    private Incidence incidence;
+    @Column(nullable = false)
+    private LocalDateTime changedAt = LocalDateTime.now();
 
     public StatusHistory() {
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Incidence getIncidence() {
+        return incidence;
     }
 
     public IncidenceStatus getPreviousStatus() {
@@ -45,20 +50,20 @@ public class StatusHistory {
         return newStatus;
     }
 
-    public LocalDateTime getChangedAt() {
-        return changedAt;
-    }
-
     public User getChangedBy() {
         return changedBy;
     }
 
-    public Incidence getIncidence() {
-        return incidence;
+    public LocalDateTime getChangedAt() {
+        return changedAt;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setIncidence(Incidence incidence) {
+        this.incidence = incidence;
     }
 
     public void setPreviousStatus(IncidenceStatus previousStatus) {
@@ -69,15 +74,11 @@ public class StatusHistory {
         this.newStatus = newStatus;
     }
 
-    public void setChangedAt(LocalDateTime changedAt) {
-        this.changedAt = changedAt;
-    }
-
     public void setChangedBy(User changedBy) {
         this.changedBy = changedBy;
     }
 
-    public void setIncidence(Incidence incidence) {
-        this.incidence = incidence;
+    public void setChangedAt(LocalDateTime changedAt) {
+        this.changedAt = changedAt;
     }
 }

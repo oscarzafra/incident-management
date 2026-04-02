@@ -1,6 +1,9 @@
 package com.oscar.incident_management.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,32 +16,29 @@ public class Incidence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 3000)
+    @NotBlank
+    @Size(max = 2000)
+    @Column(nullable = false, length = 2000)
     private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private IncidenceStatus status = IncidenceStatus.OPEN;
+    private IncidenceStatus status = IncidenceStatus.ABIERTA;
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
-
-    @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "client_id")
     private User client;
 
     @ManyToOne
-    @JoinColumn(name = "technician_id")
-    private User technician;
-
-    @OneToMany(mappedBy = "incidence", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Attachment> attachments = new ArrayList<>();
+    @JoinColumn(name = "assigned_technician_id")
+    private User assignedTechnician;
 
     @OneToMany(mappedBy = "incidence", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StatusHistory> statusHistory = new ArrayList<>();
@@ -46,12 +46,10 @@ public class Incidence {
     @OneToMany(mappedBy = "incidence", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TechnicalNote> technicalNotes = new ArrayList<>();
 
-    public Incidence() {
-    }
+    @OneToMany(mappedBy = "incidence", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attachment> attachments = new ArrayList<>();
 
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
+    public Incidence() {
     }
 
     public Long getId() {
@@ -74,20 +72,12 @@ public class Incidence {
         return createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
     public User getClient() {
         return client;
     }
 
-    public User getTechnician() {
-        return technician;
-    }
-
-    public List<Attachment> getAttachments() {
-        return attachments;
+    public User getAssignedTechnician() {
+        return assignedTechnician;
     }
 
     public List<StatusHistory> getStatusHistory() {
@@ -96,6 +86,10 @@ public class Incidence {
 
     public List<TechnicalNote> getTechnicalNotes() {
         return technicalNotes;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
     }
 
     public void setId(Long id) {
@@ -118,20 +112,12 @@ public class Incidence {
         this.createdAt = createdAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public void setClient(User client) {
         this.client = client;
     }
 
-    public void setTechnician(User technician) {
-        this.technician = technician;
-    }
-
-    public void setAttachments(List<Attachment> attachments) {
-        this.attachments = attachments;
+    public void setAssignedTechnician(User assignedTechnician) {
+        this.assignedTechnician = assignedTechnician;
     }
 
     public void setStatusHistory(List<StatusHistory> statusHistory) {
@@ -140,5 +126,9 @@ public class Incidence {
 
     public void setTechnicalNotes(List<TechnicalNote> technicalNotes) {
         this.technicalNotes = technicalNotes;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
     }
 }

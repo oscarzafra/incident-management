@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Configuration
@@ -21,44 +22,45 @@ public class DataInitializer {
         return args -> {
             Role adminRole = roleRepository.findByName("ROLE_ADMIN")
                     .orElseGet(() -> roleRepository.save(new Role("ROLE_ADMIN")));
-
-            Role clientRole = roleRepository.findByName("ROLE_CLIENT")
-                    .orElseGet(() -> roleRepository.save(new Role("ROLE_CLIENT")));
-
             Role technicianRole = roleRepository.findByName("ROLE_TECHNICIAN")
                     .orElseGet(() -> roleRepository.save(new Role("ROLE_TECHNICIAN")));
+            Role clientRole = roleRepository.findByName("ROLE_CLIENT")
+                    .orElseGet(() -> roleRepository.save(new Role("ROLE_CLIENT")));
 
             if (userRepository.findByUsername("admin").isEmpty()) {
                 User admin = new User();
                 admin.setUsername("admin");
-                admin.setEmail("admin@incidencias.com");
                 admin.setPassword(passwordEncoder.encode("admin123"));
-                admin.setFullName("Administrador");
+                admin.setFullName("Administrador del sistema");
+                admin.setEmail("admin@test.com");
                 admin.setEnabled(true);
+                admin.setCreatedAt(LocalDateTime.now());
                 admin.setRoles(Set.of(adminRole));
                 userRepository.save(admin);
             }
 
-            if (userRepository.findByUsername("cliente").isEmpty()) {
-                User client = new User();
-                client.setUsername("cliente");
-                client.setEmail("cliente@incidencias.com");
-                client.setPassword(passwordEncoder.encode("cliente123"));
-                client.setFullName("Cliente Demo");
-                client.setEnabled(true);
-                client.setRoles(Set.of(clientRole));
-                userRepository.save(client);
+            if (userRepository.findByUsername("tecnico1").isEmpty()) {
+                User tech = new User();
+                tech.setUsername("tecnico1");
+                tech.setPassword(passwordEncoder.encode("tecnico123"));
+                tech.setFullName("Técnico Principal");
+                tech.setEmail("tecnico1@test.com");
+                tech.setEnabled(true);
+                tech.setCreatedAt(LocalDateTime.now());
+                tech.setRoles(Set.of(technicianRole));
+                userRepository.save(tech);
             }
 
-            if (userRepository.findByUsername("tecnico").isEmpty()) {
-                User technician = new User();
-                technician.setUsername("tecnico");
-                technician.setEmail("tecnico@incidencias.com");
-                technician.setPassword(passwordEncoder.encode("tecnico123"));
-                technician.setFullName("Técnico Demo");
-                technician.setEnabled(true);
-                technician.setRoles(Set.of(technicianRole));
-                userRepository.save(technician);
+            if (userRepository.findByUsername("cliente1").isEmpty()) {
+                User client = new User();
+                client.setUsername("cliente1");
+                client.setPassword(passwordEncoder.encode("cliente123"));
+                client.setFullName("Cliente Demo");
+                client.setEmail("cliente1@test.com");
+                client.setEnabled(true);
+                client.setCreatedAt(LocalDateTime.now());
+                client.setRoles(Set.of(clientRole));
+                userRepository.save(client);
             }
         };
     }
