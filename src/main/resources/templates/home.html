@@ -1,60 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Inicio</title>
     <meta charset="UTF-8">
+    <title>Inicio - Gestión de Incidencias</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<div class="container">
-    <div class="page-header">
-        <div>
-            <h1>Sistema de Gestión de Incidencias</h1>
-            <p class="subtitle">Panel principal de acceso a las funcionalidades de la aplicación.</p>
+<div class="home-container">
+    <div class="home-card">
+        <h1>Sistema de Gestión de Incidencias</h1>
+        <p class="home-subtitle">Selecciona la zona correspondiente según tu rol.</p>
+
+        <div class="menu-grid">
+            <a class="menu-card" th:href="@{/client}">
+                <h2>Zona Cliente</h2>
+                <p>Consultar tus incidencias y crear nuevas solicitudes.</p>
+            </a>
+
+            <a class="menu-card" th:href="@{/technician}">
+                <h2>Zona Técnico</h2>
+                <p>Gestionar incidencias asignadas y actualizar su estado.</p>
+            </a>
+
+            <a class="menu-card" th:href="@{/admin}">
+                <h2>Zona Administrador</h2>
+                <p>Supervisar incidencias y asignaciones.</p>
+            </a>
         </div>
-    </div>
 
-    <div class="card">
-        <h2>Bienvenido al sistema</h2>
-        <p>
-            Desde este panel puedes acceder a las diferentes opciones de gestión de incidencias,
-            crear nuevos registros o administrar las incidencias existentes según tu rol.
-        </p>
-    </div>
-
-    <div class="panel-links">
-        <a class="panel-link" th:href="@{/incidences}">
-            <div>
-                <div class="panel-link-title">Ver incidencias</div>
-                <div class="panel-link-text">
-                    Consulta todas las incidencias accesibles según tu perfil y revisa su estado actual.
-                </div>
-            </div>
-        </a>
-
-        <a class="panel-link" th:href="@{/incidences/create}">
-            <div>
-                <div class="panel-link-title">Crear incidencia</div>
-                <div class="panel-link-text">
-                    Registra una nueva incidencia técnica para iniciar su seguimiento.
-                </div>
-            </div>
-        </a>
-
-        <a class="panel-link" th:href="@{/admin/dashboard}">
-            <div>
-                <div class="panel-link-title">Panel de administración</div>
-                <div class="panel-link-text">
-                    Asigna técnicos y supervisa la gestión global de incidencias.
-                </div>
-            </div>
-        </a>
-    </div>
-
-    <div class="floating-actions">
-        <form th:action="@{/logout}" method="post">
-            <button type="submit" class="btn-danger">Cerrar sesión</button>
-        </form>
+        <div class="acciones">
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-secundario">Cerrar sesión</button>
+            </form>
+        </div>
     </div>
 </div>
 </body>

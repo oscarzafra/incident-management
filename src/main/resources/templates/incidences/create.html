@@ -1,42 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Crear incidencia</title>
     <meta charset="UTF-8">
+    <title>Nueva incidencia</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<div class="container">
-    <div class="page-header">
-        <div>
-            <h1>Crear incidencia</h1>
-            <p class="subtitle">Registra una nueva incidencia técnica en el sistema.</p>
-        </div>
-    </div>
 
-    <div class="actions">
-        <a class="btn btn-outline" th:href="@{/incidences}">Volver</a>
-    </div>
+<h1>Crear incidencia</h1>
 
-    <form th:action="@{/incidences/create}" th:object="${incidence}" method="post">
-        <div class="form-grid">
-            <div class="full">
-                <label>Título</label>
-                <input type="text" th:field="*{title}" placeholder="Ej. Fallo en central de alarma">
-                <div class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
-            </div>
+<div class="card-form">
+    <form th:action="@{/incidences}" th:object="${incidence}" method="post" enctype="multipart/form-data">
 
-            <div class="full">
-                <label>Descripción</label>
-                <textarea th:field="*{description}" placeholder="Describe el problema detectado"></textarea>
-                <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
-            </div>
-        </div>
+        <label for="title">Título</label>
+        <input id="title" type="text" th:field="*{title}" required>
 
-        <div class="floating-actions">
+        <label for="description">Descripción</label>
+        <textarea id="description" th:field="*{description}" required></textarea>
+
+        <label for="imageFile">Adjuntar imagen</label>
+        <input id="imageFile" type="file" name="imageFile" accept="image/*">
+
+        <div class="acciones">
             <button type="submit">Guardar incidencia</button>
+            <a class="btn btn-secundario" th:href="@{/incidences}">Cancelar</a>
         </div>
     </form>
 </div>
+
 </body>
 </html>

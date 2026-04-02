@@ -3,15 +3,13 @@ package com.oscar.incident_management.service.impl;
 import com.oscar.incident_management.entity.Attachment;
 import com.oscar.incident_management.entity.Incidence;
 import com.oscar.incident_management.repository.AttachmentRepository;
+import com.oscar.incident_management.repository.IncidenceRepository;
 import com.oscar.incident_management.service.AttachmentService;
-import com.oscar.incident_management.service.IncidenceService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,53 +17,66 @@ import java.util.UUID;
 public class AttachmentServiceImpl implements AttachmentService {
 
     private final AttachmentRepository attachmentRepository;
-    private final IncidenceService incidenceService;
+    private final IncidenceRepository incidenceRepository;
 
-    @Value("${app.upload.dir:uploads}")
-    private String uploadDir;
+    private final Path uploadPath = Paths.get("uploads");
 
     public AttachmentServiceImpl(AttachmentRepository attachmentRepository,
-                                 IncidenceService incidenceService) {
+                                 IncidenceRepository incidenceRepository) {
         this.attachmentRepository = attachmentRepository;
-        this.incidenceService = incidenceService;
-    }
+        this.incidenceRepository = incidenceRepository;
 
-    @Override
-    public void store(Long incidenceId, MultipartFile file) throws IOException {
-        if (file == null || file.isEmpty()) {
-            return;
-        }
-
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            throw new IOException("Solo se permiten archivos de imagen");
-        }
-
-        Incidence incidence = incidenceService.findById(incidenceId);
-
-        Path uploadPath = Paths.get(uploadDir);
-        if (!Files.exists(uploadPath)) {
+        try {
             Files.createDirectories(uploadPath);
+        } catch (IOException e) {
+            throw new RuntimeException("No se pudo crear la carpeta uploads", e);
         }
-
-        String originalFilename = file.getOriginalFilename() != null ? file.getOriginalFilename() : "imagen";
-        String storedFilename = UUID.randomUUID() + "_" + originalFilename;
-        Path targetPath = uploadPath.resolve(storedFilename);
-
-        Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-
-        Attachment attachment = new Attachment();
-        attachment.setIncidence(incidence);
-        attachment.setOriginalFilename(originalFilename);
-        attachment.setStoredFilename(storedFilename);
-        attachment.setFilePath("/uploads/" + storedFilename);
-        attachment.setUploadedAt(LocalDateTime.now());
-
-        attachmentRepository.save(attachment);
     }
 
     @Override
-    public List<Attachment> findByIncidenceId(Long incidenceId) {
-        return attachmentRepository.findByIncidence_IdOrderByUploadedAtDesc(incidenceId);
+    public Attachment saveAttachment(Long incidenceId, MultipartFile file) {
+
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
+
+        try {
+            // Obtener incidencia
+            Incidence incidence = incidenceRepository.findById(incidenceId)
+                    .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+
+            // Generar nombre único
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+
+            String fileName = UUID.randomUUID() + extension;
+
+            // Guardar archivo físico
+            Path destination = uploadPath.resolve(fileName);
+            Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+
+            // Crear entidad Attachment
+            Attachment attachment = new Attachment();
+            attachment.setFileName(fileName);
+            attachment.setOriginalFileName(originalFilename);
+            attachment.setIncidence(incidence);
+
+            return attachmentRepository.save(attachment);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar el archivo", e);
+        }
+    }
+
+    @Override
+    public List<Attachment> findByIncidence(Long incidenceId) {
+        Incidence incidence = incidenceRepository.findById(incidenceId)
+                .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+
+        return attachmentRepository.findByIncidence(incidence);
     }
 }

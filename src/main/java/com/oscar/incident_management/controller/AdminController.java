@@ -23,14 +23,15 @@ public class AdminController {
     @GetMapping("/dashboard")
     public String dashboard(Model model,
                             @AuthenticationPrincipal UserDetails userDetails) {
-        model.addAttribute("incidences", incidenceService.findVisibleForUser(userDetails.getUsername()));
+        model.addAttribute("incidences", incidenceService.findAll());
         model.addAttribute("technicians", userService.findTechnicians());
         return "admin/dashboard";
     }
 
     @PostMapping("/incidences/{id}/assign")
-    public String assignTechnician(@PathVariable Long id, @RequestParam Long technicianId) {
+    public String assignTechnician(@PathVariable Long id,
+                                   @RequestParam Long technicianId) {
         incidenceService.assignTechnician(id, technicianId);
-        return "redirect:/incidences/" + id;
+        return "redirect:/admin/dashboard";
     }
 }

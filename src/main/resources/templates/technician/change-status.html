@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cambiar estado</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<h1>Cambiar estado de incidencia</h1>
+
+<div class="card-form">
+    <p><strong>Incidencia:</strong> <span th:text="${incidence.title}"></span></p>
+    <p><strong>Descripción:</strong> <span th:text="${incidence.description}"></span></p>
+    <p><strong>Estado actual:</strong> <span th:text="${incidence.status}"></span></p>
+
+    <form th:action="@{'/technician/incidences/' + ${incidence.id} + '/status'}" method="post">
+        <label for="status">Nuevo estado</label>
+        <select id="status" name="status" required>
+            <option value="OPEN">OPEN</option>
+            <option value="IN_PROGRESS">IN_PROGRESS</option>
+            <option value="PENDING_CLIENT">PENDING_CLIENT</option>
+            <option value="RESOLVED">RESOLVED</option>
+            <option value="CLOSED">CLOSED</option>
+        </select>
+
+        <div class="acciones">
+            <button type="submit">Guardar cambio</button>
+            <a class="btn btn-secundario" th:href="@{/technician/incidences}">Cancelar</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

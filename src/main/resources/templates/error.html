@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Error</title>
     <meta charset="UTF-8">
+    <title>Error</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<div class="container">
-    <h1>Ha ocurrido un error</h1>
-    <div class="card">
-        <p>Se ha producido un error inesperado en la aplicación.</p>
-        <a th:href="@{/home}">Volver al inicio</a>
+
+<div class="home-container">
+    <div class="home-card">
+        <h1>Se ha producido un error</h1>
+        <p>La página solicitada no se ha podido cargar correctamente.</p>
+
+        <div class="acciones">
+            <a class="btn" href="/">Volver al inicio</a>
+            <a class="btn btn-secundario" href="/login">Ir al login</a>
+        </div>
     </div>
 </div>
+
 </body>
 </html>

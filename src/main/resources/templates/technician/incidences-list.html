@@ -2,24 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Mis incidencias</title>
+    <title>Incidencias asignadas</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+<h1>Incidencias asignadas</h1>
 
-<h1>Mis incidencias</h1>
-
-<div th:if="${success == 'created'}" class="mensaje-ok">
-    La incidencia se ha creado correctamente.
+<div th:if="${success == 'statusUpdated'}" class="mensaje-ok">
+    El estado de la incidencia se ha actualizado correctamente.
 </div>
 
 <div class="acciones">
-    <a class="btn" th:href="@{/incidences/new}">Crear incidencia</a>
     <a class="btn btn-secundario" th:href="@{/}">Volver al inicio</a>
 </div>
 
 <div th:if="${#lists.isEmpty(incidences)}" class="sin-datos">
-    No tienes incidencias registradas todavía.
+    No tienes incidencias asignadas actualmente.
 </div>
 
 <table th:if="${not #lists.isEmpty(incidences)}">
@@ -29,8 +27,7 @@
         <th>Título</th>
         <th>Descripción</th>
         <th>Estado</th>
-        <th>Imagen</th>
-        <th>Fecha de creación</th>
+        <th>Acción</th>
     </tr>
     </thead>
     <tbody>
@@ -40,16 +37,10 @@
         <td th:text="${incidence.description}"></td>
         <td th:text="${incidence.status}"></td>
         <td>
-            <span th:if="${incidence.imagePath == null}">Sin imagen</span>
-            <img th:if="${incidence.imagePath != null}"
-                 th:src="@{'/uploads/' + ${incidence.imagePath}}"
-                 alt="Imagen incidencia"
-                 style="max-width:100px; border-radius:6px;">
+            <a class="btn" th:href="@{'/technician/incidences/' + ${incidence.id} + '/status'}">Cambiar estado</a>
         </td>
-        <td th:text="${#temporals.format(incidence.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
     </tr>
     </tbody>
 </table>
-
 </body>
 </html>

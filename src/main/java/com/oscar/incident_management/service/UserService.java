@@ -21,7 +21,15 @@ public class UserService {
     }
 
     public List<User> findTechnicians() {
-        return userRepository.findByRoles_Name("ROLE_TECHNICIAN");
+        return userRepository.findAll().stream()
+                .filter(user -> user.getRoles().stream()
+                        .anyMatch(role ->
+                                role.getName().equalsIgnoreCase("TECHNICIAN")
+                                        || role.getName().equalsIgnoreCase("ROLE_TECHNICIAN")
+                                        || role.getName().equalsIgnoreCase("TECNICO")
+                                        || role.getName().equalsIgnoreCase("ROLE_TECNICO")
+                        ))
+                .toList();
     }
 
     public List<User> findAll() {
