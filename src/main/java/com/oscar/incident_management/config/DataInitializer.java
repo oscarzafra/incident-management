@@ -32,7 +32,6 @@ public class DataInitializer {
                 admin.setUsername("admin");
                 admin.setPassword(passwordEncoder.encode("admin123"));
                 admin.setFullName("Administrador del sistema");
-                admin.setEmail("admin@test.com");
                 admin.setEnabled(true);
                 admin.setCreatedAt(LocalDateTime.now());
                 admin.setRoles(Set.of(adminRole));
@@ -44,7 +43,6 @@ public class DataInitializer {
                 tech.setUsername("tecnico1");
                 tech.setPassword(passwordEncoder.encode("tecnico123"));
                 tech.setFullName("Técnico Principal");
-                tech.setEmail("tecnico1@test.com");
                 tech.setEnabled(true);
                 tech.setCreatedAt(LocalDateTime.now());
                 tech.setRoles(Set.of(technicianRole));
@@ -56,7 +54,6 @@ public class DataInitializer {
                 client.setUsername("cliente1");
                 client.setPassword(passwordEncoder.encode("cliente123"));
                 client.setFullName("Cliente Demo");
-                client.setEmail("cliente1@test.com");
                 client.setEnabled(true);
                 client.setCreatedAt(LocalDateTime.now());
                 client.setRoles(Set.of(clientRole));
